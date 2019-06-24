@@ -3,12 +3,15 @@ package com.vsm.myshows.ui.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vsm.myshows.R
+import com.vsm.myshows.adapters.PopularAdapter
+import com.vsm.myshows.service.ItemPopular
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,10 +28,15 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class PopularFragment : Fragment() {
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+    var root: View? = null
+    lateinit var mRecyclerView: RecyclerView
+
+    val mAdapter: PopularAdapter = PopularAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +51,11 @@ class PopularFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_popular, container, false)
+        root = inflater.inflate(R.layout.fragment_popular, container, false)
+        //inflo el recicler
+        setUpRecyclerView()
+
+        return root
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -99,5 +111,18 @@ class PopularFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    fun setUpRecyclerView() {
+
+        val itemsShows = (0..20).map {
+            ItemPopular("Titulo: ${it}", "Subtitulo: $it", "Subtitulo: $it")
+        }
+
+        mRecyclerView = root?.findViewById(R.id.recyclerViewPopular) as RecyclerView
+        mRecyclerView.setHasFixedSize(true)
+        mRecyclerView.layoutManager = LinearLayoutManager(root!!.context)
+        mAdapter.PopularAdapter(itemsShows, root!!.context)
+        mRecyclerView.adapter = mAdapter
     }
 }
