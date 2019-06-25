@@ -1,17 +1,18 @@
 package com.vsm.myshows.ui.fragments
 
 import android.content.Context
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vsm.myshows.R
 import com.vsm.myshows.adapters.PopularAdapter
 import com.vsm.myshows.service.ItemPopular
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,7 +52,7 @@ class PopularFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        root = inflater.inflate(R.layout.fragment_popular, container, false)
+        root = inflater.inflate(com.vsm.myshows.R.layout.fragment_popular, container, false)
         //inflo el recicler
         setUpRecyclerView()
 
@@ -114,14 +115,16 @@ class PopularFragment : Fragment() {
     }
 
     fun setUpRecyclerView() {
-
         val itemsShows = (0..20).map {
             ItemPopular("Titulo: ${it}", "Subtitulo: $it", "Subtitulo: $it")
         }
-
-        mRecyclerView = root?.findViewById(R.id.recyclerViewPopular) as RecyclerView
+        mRecyclerView = root?.findViewById(com.vsm.myshows.R.id.recyclerViewPopular) as RecyclerView
         mRecyclerView.setHasFixedSize(true)
-        mRecyclerView.layoutManager = LinearLayoutManager(root!!.context)
+        if (activity!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mRecyclerView.setLayoutManager(GridLayoutManager(root!!.context, 2))
+        } else {
+            mRecyclerView.setLayoutManager(GridLayoutManager(root!!.context, 4))
+        }
         mAdapter.PopularAdapter(itemsShows, root!!.context)
         mRecyclerView.adapter = mAdapter
     }
